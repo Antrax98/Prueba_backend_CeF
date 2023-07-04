@@ -2,7 +2,13 @@ require('dotenv').config()
 
 const express = require('express');
 const mongoose = require('mongoose');
+
 const userRoutes = require('./routes/userRoutes')
+const cuadrillaRoutes = require('./routes/cuadrillaRoutes')
+const fichaRoutes = require('./routes/cuadrillaRoutes')
+const asistenciaRoutes = require('./routes/cuadrillaRoutes')
+const baseRoutes = require('./routes/cuadrillaRoutes')
+const temporadaRoutes = require('./routes/cuadrillaRoutes')
 
 const app = express()
 
@@ -14,6 +20,11 @@ app.use(express.json())
 
 //ROUTES
 app.use('/api/user', userRoutes)
+app.use('/api/cuadrilla', cuadrillaRoutes)
+app.use('/api/ficha', fichaRoutes)
+app.use('/api/asistencia', asistenciaRoutes)
+app.use('/api/base', baseRoutes)
+app.use('/api/temporada', temporadaRoutes)
 
 //BASE DE DATOS
 mongoose.connect(process.env.MONGO_URI)

@@ -2,83 +2,91 @@ import endOfDay from 'date-fns/endOfDay'
 import startOfDay from 'date-fns/startOfDay'
 
 const Asistencia = require('../models/asistenciaModel')
-const Brigadista = require('../models/userModel')
-const jwt = require('jsonwebtoken')
+const Usuario = require('../models/userModel')
+const Ficha = require('../models/fichaModel')
 
-//Registrar asistencia
-//esta 
-const crearAsistencia = async (req,res) => {
-    const {rut} = req.body
+const crearHorarioAsistencias = async (req,res) => {
+    const {ficha_id} = req.body
 
-    //buscar usuario
-    let brigadistaAct
+    if(!ficha_id){
+        return res.status(400).json({message: 'Se requiere un objeto "ficha_id"'})
+    }
+
+    let fichaActual
     try{
-        brigadistaAct = await Brigadista.findOne({rut: rut});
+        fichaActual = await Ficha.findById(ficha_id).populate('user', 'cuadrilla')
     }catch (error){
-        return res.status(400).json({message})
-    }
-    
-    //obtener hora actual
-    let fecha_actual = Date.now()
-    hora_actual = fecha_actual.getHours()
-
-    //VALIDACION 1 si brigadista no existe (o hay error buscandolo?)
-    if (!brigadistaAct) {
-        throw Error('El brigadista no existe')
+        return res.status(400).json({error: error.message})
     }
 
-    //buscar si existe una asistencia el mismo dia
-    const fecha_in = startOfDay(Date.now())
-    const fecha_fi = endOfDay(Date.now())
-    const existeAsistencia = await Asistencia.findOne({
-        _id: brigadistaAct._id,
-        fecha: {"$gte": fecha_in, "$lt": fecha_fi}    
-    })
+    //crear todas las asistencias
+    let horario = fichaActual.cuadrilla.horario
+    let asistencias = []
 
-    //VALIDACION 2 Que solo exista una asistenciaXbrigadista al dia
-    if (existeAsistencia) {
-        return res.status(400).json({message: "Ya esxiste una asistencia para este dia"})
+    for(const hora of horario) {
+        let asis = new Asistencia({
+            user: fichaActual.user._id,
+            ficha: ficha_id,
+            fecha: hora
+        })
+        asistencias.push(asis)
     }
 
-    //VALIDACION 3 fecha en horario permitido (8:00 <-actual-> 18:00)
-    if (hora_actual < 8 && hora_actual >= 18){
-        return res.status(400).json({message: "Hora esta fuera del rango permitido"})
-    }
+    try{
+        Asistencia.insertMany(asistencias).then((docs) => {
+            return res.statur(200).json({
+                message: 'Asistencias creadas correctamente',
+                asistencias: asistencias
+            })
+        })
 
-    //Verificar si es un brigadista normal o un jefe
-    // para auto aceptar asistencias de jefes
-    
-    try {
-
-        if (brigadista.userType == 'jefe_cuadrilla'){
-            const asistencia = await this.create({fecha: Date.now(), brigadista: brigadistaAct._id, aceptado: true})
-        }else{
-            const asistencia = await this.create({fecha: Date.now(), brigadista: brigadistaAct._id, aceptado: false})
-        }
-
-        return res.status(200).json(asistencia)
-    }catch (error){
+    }catch(error){
         return res.status(400).json({error: error.message})
     }
 
 }
 
-//ACEPTAR ASISTENCIA
-//! (SI SE PUEDE QUE VERIFIQUE QUE QUIEN LAME LA FUNCION SEA UN JEFE)
-const aceptarAsistencia = async (req,res) => {
-    const {asistenciaId} = req.body
+const marcarAsistencia = async (req,res) => {
+    const {asistencia_id} = req.body
+
+    if(!asistencia_id){
+        return res.status(400).json({message: 'Se requiere un objeto "asistencia_id"'})
+    }
 
     try{
-        asistencia.findOneAndUpdate({_id: asistenciaId},{aceptado: true},function(err,asis){
-            return res.status(200).json(asis)
+        Asistencia.findByIdAndUpdate(asistencia_id, {marcado: true}).then((doc) => {
+            return res.statur(200).json({
+                message: 'Asistencias marcada correctamente',
+                asistencia: doc
+            })
         })
-    }catch (error){
+    }catch(error){
         return res.status(400).json({error: error.message})
     }
 
+}
+
+const aceptarAsistencia = async (req,res) => {
+    const {asistencia_id} = req.body
+
+    if(!asistencia_id){
+        return res.status(400).json({message: 'Se requiere un objeto "asistencia_id"'})
+    }
+
+    try{
+        Asistencia.findByIdAndUpdate(asistencia_id, {aceptado: true}).then((doc) => {
+            return res.statur(200).json({
+                message: 'Asistencias aceptada correctamente',
+                asistencia: doc
+            })
+        })
+    }catch(error){
+        return res.status(400).json({error: error.message})
+    }
 }
 
 module.exports = {
-    crearAsistencia,
+    crearHorarioAsistencias,
+    marcarAsistencia,
     aceptarAsistencia
 }

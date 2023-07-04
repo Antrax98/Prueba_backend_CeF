@@ -11,16 +11,29 @@ const userSchema = new Schema({
     },
     rut: {
         type: String,
-        require: true,
+        required: true,
         unique: true
     },
     password: {
         type: String,
-        requires: true
+        required: true
     },
     userType: {
         type: String,
-        enum: ['admin','brigadista','jefe_cuadrilla','lider_brigada','central']
+        enum: ['admin','brigadista','jefe_cuadrilla'],
+        required: true
+    },
+    nombres: {
+        type: String,
+        default: 'Nombre Nombre'
+    },
+    apellidos: {
+        type: String,
+        default: 'Apellido Apellido'
+    },
+    fechaNacimiento: {
+        type: Date,
+        
     }
 },
 {
@@ -54,19 +67,24 @@ userSchema.statics.signup = async function(email, password, rut, userType) {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
 
-    const user = await this.create({email, password: hash,rut,admin,brigadista})
+    const user = await this.create({
+        email,
+        password: hash,
+        rut,
+        userType
+    })
 
     return user
 }
 
 //static login method
-userSchema.statics.login = async function(email, password) {
+userSchema.statics.login = async function(rut, password) {
 
-    if(!email || !password) {
+    if(!rut || !password) {
         throw Error('no debe haber campos vacios')
     }
 
-    const user = await this.findOne({email})
+    const user = await this.findOne({rut})
 
     if (!user){
         throw Error('Usuario no existe')

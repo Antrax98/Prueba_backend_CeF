@@ -33,10 +33,10 @@ const loginUser = async (req,res) => {
 
 //signup
 const signupUser = async (req,res) => {
-    const {email, password,rut,admin,brigadista} = req.body
+    const {email, password,rut,userType} = req.body
 
     try {
-        const user = await User.signup(email,password,rut,admin,brigadista)
+        const user = await User.signup(email,password,rut,userType)
 
         res.status(200).json({email,rut})
     } catch (error) {

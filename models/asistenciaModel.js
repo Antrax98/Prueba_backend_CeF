@@ -1,25 +1,32 @@
-import endOfDay from 'date-fns/endOfDay'
-import startOfDay from 'date-fns/startOfDay'
-
 const mongoose = require('mongoose')
-const brigadista = require('./userModel')
+
+const Usuario = require('./userModel')
+const Ficha = require('./fichaModel')
 
 const Schema = mongoose.Schema
 
-const asistenciaShema = new Schema({
-    brigadista: {
+const asistenciaSchema = new Schema({
+    user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: brigadista,
+        ref: Usuario,
+        required: true
+    },
+    ficha: {
+        type: Schema.Types.ObjectId,
+        ref: Ficha,
         required: true
     },
     aceptado: {
         type: Boolean,
         default: false
     },
+    marcado: {
+        type: Boolean,
+        default: false
+    },
     fecha: {
         type: Date,
-        required: true,
-        default: Date.now()
+        required: true
     }
 })
 
