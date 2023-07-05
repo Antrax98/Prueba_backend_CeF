@@ -4,6 +4,8 @@ const Usuario = require('../models/userModel')
 const Ficha = require('../models/fichaModel')
 const Cuadrilla = require('../models/cuadrillaModel')
 
+const {startOfMonth,endOfMonth} = require('date-fns')
+
 const crearHorarioAsistencias = async (req,res) => {
     const {ficha_id} = req.body
 
@@ -93,8 +95,39 @@ const aceptarAsistencia = async (req,res) => {
     }
 }
 
+const asistenciaMensual = async (req,res) => {
+    const {fecha} = req.body
+
+    let aux = new Date(fecha)
+    let ini = startOfMonth(aux)
+    let fin = endOfMonth(aux)
+
+    let data
+    try{
+        data = await Asistencia.find({
+            aceptado: true,
+            marcado: true,
+            fecha : {
+                $gte: ini,
+                $lt: fin
+            }
+        })
+
+        //(TODO) Limpiar data antes de enviar
+
+
+        return res.status(200).json({
+            message: 'Asistencias aceptada correctamente',
+            data: data
+        })
+    }catch(error){
+        return res.status(400).json({error: error.message})
+    }
+}
+
 module.exports = {
     crearHorarioAsistencias,
     marcarAsistencia,
-    aceptarAsistencia
+    aceptarAsistencia,
+    asistenciaMensual
 }
