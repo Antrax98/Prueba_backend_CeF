@@ -1,12 +1,13 @@
-import endOfDay from 'date-fns/endOfDay'
-import startOfDay from 'date-fns/startOfDay'
 
 const Asistencia = require('../models/asistenciaModel')
 const Usuario = require('../models/userModel')
 const Ficha = require('../models/fichaModel')
+const Cuadrilla = require('../models/cuadrillaModel')
 
 const crearHorarioAsistencias = async (req,res) => {
     const {ficha_id} = req.body
+
+    //TODO: REVISAR SI LA FICHA YA TIENE SU HORARIOXASISTENCIAS CREADO
 
     if(!ficha_id){
         return res.status(400).json({message: 'Se requiere un objeto "ficha_id"'})
@@ -14,13 +15,22 @@ const crearHorarioAsistencias = async (req,res) => {
 
     let fichaActual
     try{
-        fichaActual = await Ficha.findById(ficha_id).populate('user', 'cuadrilla')
+        fichaActual = await Ficha.findById(ficha_id)
+        console.log(fichaActual)
+        console.log(fichaActual.cuadrilla)
     }catch (error){
         return res.status(400).json({error: error.message})
     }
-
+    let cuadrillaAct
+    try{
+        cuadrillaAct = await Cuadrilla.findById(fichaActual.cuadrilla)
+    }catch(error){
+        return res.status(400).json({error: error.message})
+    }
+    console.log(cuadrillaAct)
     //crear todas las asistencias
-    let horario = fichaActual.cuadrilla.horario
+    const horario = cuadrillaAct.horario
+    console.log(cuadrillaAct.horario)
     let asistencias = []
 
     for(const hora of horario) {
@@ -34,7 +44,7 @@ const crearHorarioAsistencias = async (req,res) => {
 
     try{
         Asistencia.insertMany(asistencias).then((docs) => {
-            return res.statur(200).json({
+            return res.status(200).json({
                 message: 'Asistencias creadas correctamente',
                 asistencias: asistencias
             })
@@ -55,9 +65,8 @@ const marcarAsistencia = async (req,res) => {
 
     try{
         Asistencia.findByIdAndUpdate(asistencia_id, {marcado: true}).then((doc) => {
-            return res.statur(200).json({
-                message: 'Asistencias marcada correctamente',
-                asistencia: doc
+            return res.status(200).json({
+                message: 'Asistencias marcada correctamente'
             })
         })
     }catch(error){
@@ -75,9 +84,8 @@ const aceptarAsistencia = async (req,res) => {
 
     try{
         Asistencia.findByIdAndUpdate(asistencia_id, {aceptado: true}).then((doc) => {
-            return res.statur(200).json({
-                message: 'Asistencias aceptada correctamente',
-                asistencia: doc
+            return res.status(200).json({
+                message: 'Asistencias aceptada correctamente'
             })
         })
     }catch(error){

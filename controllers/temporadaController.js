@@ -1,5 +1,7 @@
-import endOfDay from 'date-fns/endOfDay'
-import startOfDay from 'date-fns/startOfDay'
+// import endOfDay from 'date-fns/endOfDay'
+// import startOfDay from 'date-fns/startOfDay'
+
+const {endOfDay,startOfDay} = require('date-fns')
 
 const Temporada = require('../models/temporadaModel')
 
@@ -10,13 +12,16 @@ const crearTemporada = async (req,res) => {
 
 
     //OBTENER BUENOS DATOS
-    let inicio_var = fecha_ini.startOfDay()
-    let fin_var = fecha_fin.endOfDay()
+    let ref_ini = new Date(fecha_ini)
+    let ref_fin = new Date(fecha_fin)
+
+    let inicio_var = startOfDay(ref_ini)
+    let fin_var = endOfDay(ref_fin)
 
     //Crear nueva temporada
     const newTemporada = new Temporada({
-        inicio: new Date(),
-        fin: new Date(),
+        inicio: inicio_var,
+        fin: fin_var,
         tipo: temporada_tipo
     })
 

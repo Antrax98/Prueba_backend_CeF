@@ -7,7 +7,6 @@ const crearBase = async (req,res) => {
 
     //verificar si existen valores
     if(!nombre){
-        console.log("no existe el nombre")
         return res.status(400).json({message: 'Faltan datos act'})
     }
     

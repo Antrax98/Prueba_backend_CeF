@@ -5,10 +5,10 @@ const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/userRoutes')
 const cuadrillaRoutes = require('./routes/cuadrillaRoutes')
-const fichaRoutes = require('./routes/cuadrillaRoutes')
-const asistenciaRoutes = require('./routes/cuadrillaRoutes')
-const baseRoutes = require('./routes/cuadrillaRoutes')
-const temporadaRoutes = require('./routes/cuadrillaRoutes')
+const fichaRoutes = require('./routes/fichaRoutes')
+const asistenciaRoutes = require('./routes/asistenciaRoutes')
+const baseRoutes = require('./routes/baseRoutes')
+const temporadaRoutes = require('./routes/temporadaRoutes')
 
 const app = express()
 
