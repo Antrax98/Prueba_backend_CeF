@@ -3,6 +3,9 @@ require('dotenv').config()
 const express = require('express');
 const mongoose = require('mongoose');
 
+const {requireAuth} = require('./middleware/authMiddleware')
+const {fichaAggregator} = require('./middleware/dataAggregatorMiddleware')
+
 const userRoutes = require('./routes/userRoutes')
 const cuadrillaRoutes = require('./routes/cuadrillaRoutes')
 const fichaRoutes = require('./routes/fichaRoutes')
@@ -18,7 +21,17 @@ app.use(express.json())
 //     console.log(req.path, req.method)
 // })
 
+app.use(requireAuth)
+app.use(fichaAggregator)
+
+// app.use((req,res,next) => {
+//     console.log(req.headers.authorization)
+//     req.TOKENDATA = {MENSAJEEEEEEEEEEEEEEEEEEE: "AAAAAAAAAAAAAAGGGGGHHHHHHHHHHHHHH"}
+//     next()
+// })
+
 //ROUTES
+app.use('/api/test', (req,res) => {return res.status(200).json(req.FICHADATA)})
 app.use('/api/user', userRoutes)
 app.use('/api/cuadrilla', cuadrillaRoutes)
 app.use('/api/ficha', fichaRoutes)

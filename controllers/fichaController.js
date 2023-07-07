@@ -3,14 +3,15 @@ const Ficha = require('../models/fichaModel')
 
 //MODIFICAR SI SE AÑADEN MAS VALORES A BASE
 const crearFicha = async (req,res) => {
-    const {user_id,cargo,cuadrilla_id} = req.body
+    const {user_id,cargo,cuadrilla_id,temporada_id} = req.body
 
     
 
     const newFicha = new Ficha({
         user: user_id,
         cargo: cargo,
-        cuadrilla: cuadrilla_id
+        cuadrilla: cuadrilla_id,
+        temporada: temporada_id
     })
 
     try{

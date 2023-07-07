@@ -6,11 +6,13 @@ const createToken = async (user) => {
     return jwt.sign(
         {
             _id : user._id,
-            userType : user.userType
+            userType : user.userType,
+            nombres: user.nombres,
+            apellidos: user.apellidos
         },
         process.env.SECRET,
         {
-            expiresIn: '3d'
+            expiresIn: '1d'
         }
     )
 }

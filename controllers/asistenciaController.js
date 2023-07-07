@@ -9,6 +9,11 @@ const {startOfMonth,endOfMonth} = require('date-fns')
 const crearHorarioAsistencias = async (req,res) => {
     const {ficha_id} = req.body
 
+    //Validar tipo de usuario
+    if(req.TOKENDATA.userType != "admin"){
+        return res.status(400).json({message: "Es necesario ser un admin"})
+    }
+
     //TODO: REVISAR SI LA FICHA YA TIENE SU HORARIOXASISTENCIAS CREADO
 
     if(!ficha_id){
@@ -61,6 +66,11 @@ const crearHorarioAsistencias = async (req,res) => {
 const marcarAsistencia = async (req,res) => {
     const {asistencia_id} = req.body
 
+    //Validar tipo de usuario
+    if(req.TOKENDATA.userType == "admin"){
+        return res.status(400).json({message: "Es necesario ser un brigadista"})
+    }
+
     if(!asistencia_id){
         return res.status(400).json({message: 'Se requiere un objeto "asistencia_id"'})
     }
@@ -80,6 +90,8 @@ const marcarAsistencia = async (req,res) => {
 const aceptarAsistencia = async (req,res) => {
     const {asistencia_id} = req.body
 
+    
+
     if(!asistencia_id){
         return res.status(400).json({message: 'Se requiere un objeto "asistencia_id"'})
     }
@@ -97,6 +109,11 @@ const aceptarAsistencia = async (req,res) => {
 
 const asistenciaMensual = async (req,res) => {
     const {fecha} = req.body
+
+    //Validar tipo de usuario
+    if(req.TOKENDATA.userType != "admin"){
+        return res.status(400).json({message: "Es necesario ser un admin"})
+    }
 
     let aux = new Date(fecha)
     let ini = startOfMonth(aux)

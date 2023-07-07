@@ -20,7 +20,7 @@ const userSchema = new Schema({
     },
     userType: {
         type: String,
-        enum: ['admin','brigadista','jefe_cuadrilla'],
+        enum: ['admin','brigadista'],
         required: true
     },
     nombres: {

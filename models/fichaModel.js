@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 
 const Usuario = require('./userModel')
 const Cuadrilla = require('./cuadrillaModel')
+const Temporada = require('./temporadaModel')
 
 const Schema = mongoose.Schema
 
@@ -19,6 +20,11 @@ const fichaSchema = new Schema({
     cuadrilla: {
         type: Schema.Types.ObjectId,
         ref: Cuadrilla,
+        required: true
+    },
+    temporada: {
+        type: Schema.Types.ObjectId,
+        ref: Temporada,
         required: true
     }
 })
