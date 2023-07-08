@@ -4,6 +4,10 @@ const Temporada = require('../models/temporadaModel')
 const fichaAggregator = async (req,res,next) => {
     const user_id = req.TOKENDATA._id
 
+    if (!req.TOKENDATA){
+        return next()
+    }
+
     try{
         let fechaAct = new Date()
         console.log(fechaAct)

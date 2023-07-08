@@ -67,6 +67,7 @@ const marcarAsistencia = async (req,res) => {
     const {asistencia_id} = req.body
 
     //Validar tipo de usuario
+    //VALIDAR PODRIA NO SER NECESARIO (PREGUNTAR)
     if(req.TOKENDATA.userType == "admin"){
         return res.status(400).json({message: "Es necesario ser un brigadista"})
     }
@@ -107,6 +108,7 @@ const aceptarAsistencia = async (req,res) => {
     }
 }
 
+//LA fecha ES SOLO PARA OBTENER EL AÑO Y MES, EL DIA NO ES NECESARIO
 const asistenciaMensual = async (req,res) => {
     const {fecha} = req.body
 
@@ -140,6 +142,22 @@ const asistenciaMensual = async (req,res) => {
     }catch(error){
         return res.status(400).json({error: error.message})
     }
+}
+
+//ADMIN obtiene TODAS las asistencias de la temporada de una ficha
+const obtenerAsistencia = async (req,res) => {
+    const {ficha_id,temporada_id} = req.body
+
+    if(req.TOKENDATA.userType != "admin"){
+        return res.status(400).json({message: "Es necesario ser un admin"})
+    }
+
+    if(!ficha_id){
+        return res.status(400).json({message: "falta el dato 'ficha_id'"})
+    }
+
+
+
 }
 
 module.exports = {

@@ -27,7 +27,7 @@ app.use(fichaAggregator)
 // app.use((req,res,next) => {
 //     console.log(req.headers.authorization)
 //     req.TOKENDATA = {MENSAJEEEEEEEEEEEEEEEEEEE: "AAAAAAAAAAAAAAGGGGGHHHHHHHHHHHHHH"}
-//     next()
+//     return next()
 // })
 
 //ROUTES
