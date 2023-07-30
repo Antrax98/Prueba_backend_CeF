@@ -23,4 +23,19 @@ const crearFicha = async (req,res) => {
 
 }
 
-module.exports = {crearFicha}
+const fichaActual = async (req,res) => {
+
+    //Validar tipo de usuario admin/brigadista
+    if(req.TOKENDATA.userType != "brigadista"){
+        return res.status(400).json({message: "Es necesario ser un brigadista"})
+    }
+
+    //console.log(req)
+    return res.status(200).json({ficha: req.FICHADATA})
+
+}
+
+module.exports = {
+    crearFicha,
+    fichaActual
+}
