@@ -14,6 +14,13 @@ const baseRoutes = require('./routes/baseRoutes')
 const temporadaRoutes = require('./routes/temporadaRoutes')
 
 const app = express()
+const cors = require('cors');
+
+app.use(cors());
+// app.listen(4000, () => {
+//     console.log('Servidor iniciado en el puerto 4000');
+//   });
+
 
 //MIDDLEWARE
 app.use(express.json())
