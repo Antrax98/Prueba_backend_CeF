@@ -16,6 +16,9 @@ const temporadaRoutes = require('./routes/temporadaRoutes')
 const app = express()
 const cors = require('cors');
 
+const {creaTemp,nuevaTemporada} = require('./cronJobs/temporadaJobs')
+const cron = require('node-cron')
+
 app.use(cors());
 // app.listen(4000, () => {
 //     console.log('Servidor iniciado en el puerto 4000');
@@ -50,6 +53,15 @@ app.use('/api/temporada', temporadaRoutes)
 mongoose.connect(process.env.MONGO_URI)
     .then (() => {
         console.log("conectado a la base de datos")
+
+        //Crea temporada actual si no existe
+        creaTemp()
+        //crea nueva temporada futura
+        nuevaTemporada()
+
+        //CRON-JOB
+        cron.schedule("0 0 1 * *", nuevaTemporada)
+
         app.listen (process.env.PORT, () => {
             console.log('servidor iniciado en el puerto '+process.env.PORT)
         })
