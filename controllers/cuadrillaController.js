@@ -82,7 +82,24 @@ const prueba = async (req,res) => {
     return res.status(200).json({horario: horario})
 }
 
-module.exports = {crearCuadrilla, prueba}
+const obtenerCuadrillas = async (req,res) => {
+
+    let cuadris
+    try{
+        cuadris = await Cuadrilla.find({}).populate('base').populate('temporada')
+    }catch(error){
+        return res.status(400).json({error: error.message})
+    }
+
+    return res.status(200).json({cuadrillas: cuadris})
+
+}
+
+module.exports = {
+    crearCuadrilla,
+    prueba,
+    obtenerCuadrillas
+}
 
 //ZONA FUNCIONES
 

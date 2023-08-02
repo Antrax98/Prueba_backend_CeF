@@ -23,4 +23,21 @@ const crearBase = async (req,res) => {
 
 }
 
-module.exports = {crearBase}
+//retorna todas las bases con sus nombres
+const obtenerBases = async (req,res) => {
+
+    let bas
+    try{
+        bas = await Base.find({})
+    }catch(error){
+        return res.status(400).json({error: error.message})
+    }
+
+    return res.status(200).json({Bases: bas})
+
+}
+
+module.exports = {
+    crearBase,
+    obtenerBases,
+}

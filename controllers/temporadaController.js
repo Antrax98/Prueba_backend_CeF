@@ -37,4 +37,38 @@ const crearTemporada = async (req,res) => {
     
 }
 
-module.exports = {crearTemporada}
+//obtener las temporadas actual y futura
+const tempoActFut = async (req,res) => {
+
+    let fechaAct = new Date();
+
+    let tempos
+    try{
+        tempos = await Temporada.find({fin: {$gte : fechaAct}})
+    }catch(error){
+        return res.status(400).json({error: error.message})
+    }
+
+    return res.status(200).json({temporadas: tempos})
+
+}
+
+//obtener absolutamente todas las temporadas
+const obtenerTemporadas = async (req,res) => {
+
+    let tempos
+    try{
+        tempos = await Temporada.find({})
+    }catch(error){
+        return res.status(400).json({error: error.message})
+    }
+
+    return res.status(200).json({temporadas: tempos})
+
+}
+
+module.exports = {
+    crearTemporada,
+    tempoActFut,
+    obtenerTemporadas
+}
