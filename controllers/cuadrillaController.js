@@ -3,7 +3,7 @@ const Temporada = require('../models/temporadaModel')
 const Cuadrilla = require('../models/cuadrillaModel')
 
 const crearCuadrilla = async (req,res) => {
-    const {temporada_id,base_id} = req.body
+    const {temporada_id,base_id,nombre_cuadrilla} = req.body
 
     //REVISAR SI FALTAN VARIABLES
     if(!temporada_id && !base_id){
@@ -36,6 +36,7 @@ const crearCuadrilla = async (req,res) => {
     const newCuadrilla = new Cuadrilla({
         base: base_id,
         temporada: temporada_id,
+        nombre:nombre_cuadrilla,
         horario: horario
     })
 

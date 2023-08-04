@@ -16,6 +16,10 @@ const cuadrillaSchema = new Schema({
         ref: Temporada,
         required: true
     },
+    nombre: {
+        type: String,
+        required: true
+    },
     horario: [{
         type: Date
     }]
