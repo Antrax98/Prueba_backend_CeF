@@ -96,10 +96,27 @@ const obtenerCuadrillas = async (req,res) => {
 
 }
 
+const obtenerCuadrillasEnBase = async (req,res) => {
+
+    let baseAct = req.params.base
+
+    let cuadrillas
+    
+    try{
+        cuadrillas = await Cuadrilla.find({base: baseAct}).populate('temporada').populate('base')
+    }catch(error){
+        return res.status(400).json({error: error.message})
+    }
+
+    return res.status(200).json({cuadrilllas: cuadrillas})
+
+}
+
 module.exports = {
     crearCuadrilla,
     prueba,
-    obtenerCuadrillas
+    obtenerCuadrillas,
+    obtenerCuadrillasEnBase
 }
 
 //ZONA FUNCIONES
