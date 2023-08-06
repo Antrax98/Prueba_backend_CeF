@@ -248,9 +248,9 @@ const verificarMarcado = async (req,res) => {
             }
             if(asisAct){
                 if(asisAct.marcado) {
-                    return res.status(400).json({estatus: "marcado"})
+                    return res.status(200).json({estatus: "marcado"})
                 }else{
-                    return res.status(400).json({estatus: "no_marcado", asistencia: asisAct})
+                    return res.status(200).json({estatus: "no_marcado", asistencia: asisAct})
                 }
             }
     }catch(error){
@@ -258,26 +258,26 @@ const verificarMarcado = async (req,res) => {
     }
 
 
-    Asistencia.findOne({
-        fecha : {
-            $gte: fini,
-            $lt: ffin
-        }
-    }, (err,result) => {
-        if (err) {
-            return res.status(400).json({error: error.message})
-        }
-        if(!result){
-            return res.status(200).json({estatus: "inexistente"})
-        }
-        if(result){
-            if(result.marcado) {
-                return res.status(400).json({estatus: "marcado"})
-            }else{
-                return res.status(400).json({estatus: "no_marcado", asistencia: result})
-            }
-        }
-    })
+    // Asistencia.findOne({
+    //     fecha : {
+    //         $gte: fini,
+    //         $lt: ffin
+    //     }
+    // }, (err,result) => {
+    //     if (err) {
+    //         return res.status(400).json({error: error.message})
+    //     }
+    //     if(!result){
+    //         return res.status(200).json({estatus: "inexistente"})
+    //     }
+    //     if(result){
+    //         if(result.marcado) {
+    //             return res.status(200).json({estatus: "marcado"})
+    //         }else{
+    //             return res.status(200).json({estatus: "no_marcado", asistencia: result})
+    //         }
+    //     }
+    // })
 }
 
 //(WIP) - TESTING
@@ -326,7 +326,7 @@ const asistenciasPorAceptar = async (req,res) => {
     try {
         for(let i=0;i<intCuad.length;i++){
             console.log('asdasdasd')
-            let asistenciasXAceptar = await Asistencia.find({ficha: intCuad[i]._id, marcado: true, aceptado: false, fecha:{$gte:fini,$lt:ffin}})
+            let asistenciasXAceptar = await Asistencia.find({ficha: intCuad[i]._id, marcado: true, aceptado: false, fecha:{$gte:fini,$lte:ffin}})
             console.log('wwwwwwwwwwww')
             datos.push({user: intCuad[i].user,asisXAcept: asistenciasXAceptar})
             console.log('datos')
