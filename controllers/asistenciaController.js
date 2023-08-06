@@ -241,7 +241,9 @@ const verificarMarcado = async (req,res) => {
             fecha : {
                 $gte: fini,
                 $lt: ffin
-            }})
+            },
+            user: req.TOKENDATA._id
+            })
         
             if(!asisAct){
                 return res.status(200).json({estatus: "inexistente"})
