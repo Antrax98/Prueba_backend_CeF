@@ -308,36 +308,49 @@ const asistenciasPorAceptar = async (req,res) => {
 
     let intCuad
     try{
-        intCuad = await Ficha.find({cuadrilla: req.FICHADATA.cuadrilla}).populate('user')
+        intCuad = await Ficha.findOne({cuadrilla: req.FICHADATA.cuadrilla}).populate('user')
     }catch(error){
         return res.status(400).json({error: error.message})
     }
 
-    let datos = []
-    // for(let i=0;i<intCuad;i++){
-    //     try{
-    //         //COMPPLETAR DESPUES DE VER COMO FORMATEAR
-    //         let asistenciasXAceptar = await Asistencia.find({ficha: intCuad[i]._id, marcado: true, aceptado: false})
-    //         datos.push({user: datos[i].user,asisXAcept: asistenciasXAceptar})
-    //         console.log(datos)
-    //     }catch(error){
-    //         return res.status(400).json({error: error.message})
-    //     }
-    // }
 
-    try {
-        for(let i=0;i<intCuad.length;i++){
-            console.log('asdasdasd')
-            let asistenciasXAceptar = await Asistencia.find({ficha: intCuad[i]._id, marcado: true, aceptado: false, fecha:{$gte:fini,$lte:ffin}})
-            console.log('wwwwwwwwwwww')
-            datos.push({user: intCuad[i].user,asisXAcept: asistenciasXAceptar})
-            console.log('datos')
-            
-        }
-        return res.status(200).json({message: 'Peticion ejecutada correctamente', lista_asistencias: datos})
-    } catch (error) {
+
+    let fich
+
+    try{
+        fich = await Ficha.find({cuadrilla:intCuad._id})
+    }catch(error){
         return res.status(400).json({error: error.message})
     }
+
+    let fichasCuad = []
+
+    for(let i=0;i<fich.length;i++){
+        fichasCuad.push(fich[i]._id)
+    }
+
+    let asisXAcept
+    try{
+        asisXAcept = await Asistencia.find({user: {$in:fichasCuad}, aceptado: false, marcado:true})
+    }catch(error){
+        return res.status(400).json({error: error.message})
+    }
+
+    return res.status(200).json({asisXAcept:asisXAcept})
+
+    // try {
+    //     for(let i=0;i<intCuad.length;i++){
+    //         console.log('asdasdasd')
+    //         let asistenciasXAceptar = await Asistencia.find({ficha: intCuad[i]._id, marcado: true, aceptado: false, fecha:{$gte:fini,$lte:ffin}})
+    //         console.log('wwwwwwwwwwww')
+    //         datos.push({user: intCuad[i].user,asisXAcept: asistenciasXAceptar})
+    //         console.log('datos')
+            
+    //     }
+    //     return res.status(200).json({message: 'Peticion ejecutada correctamente', lista_asistencias: datos})
+    // } catch (error) {
+    //     return res.status(400).json({error: error.message})
+    // }
 
 
     //return res.status(200).json({message: 'Peticion ejecutada correctamente', lista_asistencias: datos})
