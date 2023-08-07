@@ -289,7 +289,7 @@ const verificarMarcado = async (req,res) => {
 const asistenciasPorAceptar = async (req,res) => {
 
 
-    let diasAtras = 2
+    let diasAtras = 1
 
     //Validar tipo de usuario admin/brigadista
     if(req.TOKENDATA.userType != "brigadista"){
@@ -306,35 +306,28 @@ const asistenciasPorAceptar = async (req,res) => {
     fechaIni.setDate(fechaIni.getDate()- diasAtras)
     let fini = startOfDay(fechaIni)
 
-    let intCuad
-    try{
-        intCuad = await Ficha.findOne({cuadrilla: req.FICHADATA.cuadrilla}).populate('user')
-    }catch(error){
-        return res.status(400).json({error: error.message})
-    }
-
-
-
     let fich
 
     try{
-        fich = await Ficha.find({cuadrilla:intCuad._id})
+        fich = await Ficha.find({cuadrilla:req.FICHADATA.cuadrilla})
     }catch(error){
         return res.status(400).json({error: error.message})
     }
 
-    let fichasCuad = []
-
+    let fichasCuad = new Array()
+    console.log(fich.length)
     for(let i=0;i<fich.length;i++){
-        fichasCuad.push(fich[i]._id)
+        fichasCuad.push(fich[i]._id.toString())
     }
-
+    console.log(fichasCuad)
     let asisXAcept
     try{
-        asisXAcept = await Asistencia.find({user: {$in:fichasCuad}, aceptado: false, marcado:true})
+        asisXAcept = await Asistencia.find({ficha: {"$in":fichasCuad}, aceptado: false, marcado:true, fecha:{$gte:fini,$lte:ffin}})
     }catch(error){
         return res.status(400).json({error: error.message})
     }
+
+    console.log(asisXAcept)
 
     return res.status(200).json({asisXAcept:asisXAcept})
 
