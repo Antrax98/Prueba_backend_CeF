@@ -25,8 +25,6 @@ const crearHorarioAsistencias = async (req,res) => {
     let fichaActual
     try{
         fichaActual = await Ficha.findById(ficha_id)
-        console.log(fichaActual)
-        console.log(fichaActual.cuadrilla)
     }catch (error){
         return res.status(400).json({error: error.message})
     }
@@ -36,10 +34,9 @@ const crearHorarioAsistencias = async (req,res) => {
     }catch(error){
         return res.status(400).json({error: error.message})
     }
-    console.log(cuadrillaAct)
+
     //crear todas las asistencias
     const horario = cuadrillaAct.horario
-    console.log(cuadrillaAct.horario)
     let asistencias = []
 
     for(const hora of horario) {
@@ -113,8 +110,6 @@ const aceptarAsistencia = async (req,res) => {
             }
             //COMPARAR ID DE CUADRLLA ASISTENCIA CON LA DEL JEFE ACTUAL
             if(asistenciaAct.ficha.cuadrilla.toString() != req.FICHADATA.cuadrilla.toString()){
-                console.log({message:'left',dato: asistenciaAct.ficha.cuadrilla})
-                console.log({message:'right',dato: req.FICHADATA.cuadrilla})
                 return res.status(400).json({message: "tiene que ser jefe de cuadrilla"})
             }
         }
@@ -259,27 +254,6 @@ const verificarMarcado = async (req,res) => {
         return res.status(400).json({error: error.message})
     }
 
-
-    // Asistencia.findOne({
-    //     fecha : {
-    //         $gte: fini,
-    //         $lt: ffin
-    //     }
-    // }, (err,result) => {
-    //     if (err) {
-    //         return res.status(400).json({error: error.message})
-    //     }
-    //     if(!result){
-    //         return res.status(200).json({estatus: "inexistente"})
-    //     }
-    //     if(result){
-    //         if(result.marcado) {
-    //             return res.status(200).json({estatus: "marcado"})
-    //         }else{
-    //             return res.status(200).json({estatus: "no_marcado", asistencia: result})
-    //         }
-    //     }
-    // })
 }
 
 //(WIP) - TESTING
@@ -289,7 +263,7 @@ const verificarMarcado = async (req,res) => {
 const asistenciasPorAceptar = async (req,res) => {
 
 
-    let diasAtras = 1
+    let diasAtras = 3
 
     //Validar tipo de usuario admin/brigadista
     if(req.TOKENDATA.userType != "brigadista"){
@@ -315,11 +289,10 @@ const asistenciasPorAceptar = async (req,res) => {
     }
 
     let fichasCuad = new Array()
-    console.log(fich.length)
+
     for(let i=0;i<fich.length;i++){
         fichasCuad.push(fich[i]._id.toString())
     }
-    console.log(fichasCuad)
     let asisXAcept
     try{
         asisXAcept = await Asistencia.find({ficha: {"$in":fichasCuad}, aceptado: false, marcado:true, fecha:{$gte:fini,$lte:ffin}}).populate('user')
@@ -327,26 +300,9 @@ const asistenciasPorAceptar = async (req,res) => {
         return res.status(400).json({error: error.message})
     }
 
-    console.log(asisXAcept)
+
 
     return res.status(200).json({asisXAcept:asisXAcept})
-
-    // try {
-    //     for(let i=0;i<intCuad.length;i++){
-    //         console.log('asdasdasd')
-    //         let asistenciasXAceptar = await Asistencia.find({ficha: intCuad[i]._id, marcado: true, aceptado: false, fecha:{$gte:fini,$lte:ffin}})
-    //         console.log('wwwwwwwwwwww')
-    //         datos.push({user: intCuad[i].user,asisXAcept: asistenciasXAceptar})
-    //         console.log('datos')
-            
-    //     }
-    //     return res.status(200).json({message: 'Peticion ejecutada correctamente', lista_asistencias: datos})
-    // } catch (error) {
-    //     return res.status(400).json({error: error.message})
-    // }
-
-
-    //return res.status(200).json({message: 'Peticion ejecutada correctamente', lista_asistencias: datos})
 
     
 }

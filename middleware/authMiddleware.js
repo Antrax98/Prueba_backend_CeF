@@ -8,7 +8,6 @@ const requireAuth = (req, res, next) => {
         
         try{
             let decode = jwt.verify(token, process.env.SECRET)
-            console.log(decode)
             req.TOKENDATA = decode
             return next()
         }catch(error){

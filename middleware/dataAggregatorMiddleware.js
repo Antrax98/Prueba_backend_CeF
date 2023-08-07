@@ -14,16 +14,12 @@ const fichaAggregator = async (req,res,next) => {
 
     try{
         let fechaAct = new Date()
-        console.log(fechaAct)
         tempoAct = await Temporada.findOne({inicio: {$lte: fechaAct.getTime()}, fin: {$gte: fechaAct.getTime()}})
-        console.log(tempoAct)
-
     }catch(error){
         return res.status(400).json({error: error.message})
     }
 
     if(!tempoAct){
-        console.log("no temporad actual", tempoAct)
         return next()
     }
 
@@ -34,8 +30,6 @@ const fichaAggregator = async (req,res,next) => {
     }catch(error){
         return res.status(400).json({error: error.message})
     }
-
-    console.log(fichaAct,"asdr")
 
     if(!fichaAct){
         return next()

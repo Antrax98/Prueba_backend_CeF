@@ -70,7 +70,6 @@ const fichaActual = async (req,res) => {
         return res.status(400).json({message: "Es necesario ser un brigadista"})
     }
 
-    //console.log(req)
     return res.status(200).json({ficha: req.FICHADATA})
 
 }
@@ -89,14 +88,12 @@ const usuariosSinFichaEnTemporada = async (req,res) => {
     }catch(error){
         return res.status(400).json({error: error.message})
     }
-    console.log("fichas de tempo act",fichasTemp)
+
     const listaMatch = new Array()
     
     for(let i=0;i<coun;i++){
         listaMatch.push(fichasTemp[i].user.toString())
     }
-    
-    console.log("lista match",listaMatch)
     
     let briga
     
@@ -105,8 +102,6 @@ const usuariosSinFichaEnTemporada = async (req,res) => {
     }catch(error){
         return res.status(400).json({error: error.message})
     }
-
-    console.log("briga", briga)
 
     return res.status(200).json({disponibles: briga})
 
