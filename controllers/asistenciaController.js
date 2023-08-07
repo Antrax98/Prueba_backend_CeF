@@ -322,7 +322,7 @@ const asistenciasPorAceptar = async (req,res) => {
     console.log(fichasCuad)
     let asisXAcept
     try{
-        asisXAcept = await Asistencia.find({ficha: {"$in":fichasCuad}, aceptado: false, marcado:true, fecha:{$gte:fini,$lte:ffin}})
+        asisXAcept = await Asistencia.find({ficha: {"$in":fichasCuad}, aceptado: false, marcado:true, fecha:{$gte:fini,$lte:ffin}}).populate('user')
     }catch(error){
         return res.status(400).json({error: error.message})
     }
