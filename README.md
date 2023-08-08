@@ -15,14 +15,14 @@ Este proyecto pertenece a *Francisco Ramóm Ojeda Casanueva* y *Samuel Elias San
     cd Prueba_backend_CeF
     ```
 
-2. ejecutamos "build", donde [tagName] se remplaza por un nombre a eleccion
+2. ejecutamos "build", donde [tagName] se remplaza por un nombre a eleccion (en minusculas):
     ```bash
-    docker build . -p [tagName]
+    sudo docker build . -t [tagName]
     ```
 
-3. se ejecuta "run", donde [puertoHost] se reemplaza por un puerto a elecciony [tagName] por el nombre antes elegido
+3. se ejecuta "run", donde [puertoHost] se remplaza por un puerto a elecciony [tagName] por el nombre antes elegido
     ```bash
-    docker run -d -p [puertoHost]:4000 [tagName]
+    sudo docker run -d -p [puertoHost]:4000 [tagName]
     ```
 en este punto, ya se podran testear las rutas
 
@@ -30,7 +30,7 @@ en este punto, ya se podran testear las rutas
 ### Deploy
 
 ##### pre-requisitos
- - contar con SO _Ubuntu_
+ - contar con SO _Ubuntu 20.4_
 
 #### instalacion
 
